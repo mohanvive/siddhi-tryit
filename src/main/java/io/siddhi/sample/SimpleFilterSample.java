@@ -27,7 +27,6 @@ import io.siddhi.core.util.EventPrinter;
 
 /**
  * The sample demonstrate how to use Siddhi within another Java program.
- * This sample contains a simple filter query.
  */
 public class SimpleFilterSample {
 

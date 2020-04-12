@@ -28,7 +28,7 @@ import io.siddhi.core.util.EventPrinter;
 /**
  * The sample demonstrate how to use Siddhi within another Java program.
  */
-public class BatchWindowSample {
+public class GroupBySample {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -40,8 +40,9 @@ public class BatchWindowSample {
                 "define stream StockStream (symbol string, price float, volume long); " +
                 "" +
                 "@info(name = 'query1') " +
-                "from StockStream#window.lengthBatch(2)" +
+                "from StockStream#window.lengthBatch(5)" +
                 "select symbol, price, sum(volume) as totalVolume " +
+                "group by symbol " +
                 "insert into OutputStream;";
 
         //Generate runtime
@@ -69,6 +70,15 @@ public class BatchWindowSample {
         inputHandler.send(new Object[]{"GOOG", 50f, 30L});
         inputHandler.send(new Object[]{"IBM", 76.6f, 400L});
         inputHandler.send(new Object[]{"WSO2", 45.6f, 50L});
+
+        Thread.sleep(2000);
+
+        inputHandler.send(new Object[]{"IBM", 700f, 100L});
+        inputHandler.send(new Object[]{"WSO2", 60.5f, 200L});
+        inputHandler.send(new Object[]{"GOOG", 50f, 30L});
+        inputHandler.send(new Object[]{"IBM", 76.6f, 400L});
+        inputHandler.send(new Object[]{"WSO2", 45.6f, 50L});
+
         Thread.sleep(500);
 
         //Shutdown runtime

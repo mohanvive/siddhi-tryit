@@ -28,7 +28,7 @@ import io.siddhi.core.util.EventPrinter;
 /**
  * The sample demonstrate how to use Siddhi within another Java program.
  */
-public class BatchWindowSample {
+public class PatternSample {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -37,18 +37,19 @@ public class BatchWindowSample {
 
         //Siddhi Application
         String siddhiApp = "" +
-                "define stream StockStream (symbol string, price float, volume long); " +
+                "define stream transactionStream (cardNo long, amount double, location string); " +
                 "" +
                 "@info(name = 'query1') " +
-                "from StockStream#window.lengthBatch(2)" +
-                "select symbol, price, sum(volume) as totalVolume " +
-                "insert into OutputStream;";
+                "from every (e1 = transactionStream -> e2 = transactionStream[e1.cardNo == cardNo and amount > e1.amount]" +
+                "                   -> e3 = transactionStream[e2.cardNo == cardNo and amount > e2.amount]) " +
+                "select e1.cardNo , e3.amount as finalTransactionAmount,  e3.location as finalLocation " +
+                "insert into possibleFraudStream;";
 
         //Generate runtime
         SiddhiAppRuntime siddhiAppRuntime = siddhiManager.createSiddhiAppRuntime(siddhiApp);
 
         //Adding callback to retrieve output events from stream
-        siddhiAppRuntime.addCallback("OutputStream", new StreamCallback() {
+        siddhiAppRuntime.addCallback("possibleFraudStream", new StreamCallback() {
             @Override
             public void receive(Event[] events) {
                 EventPrinter.print(events);
@@ -58,17 +59,18 @@ public class BatchWindowSample {
         });
 
         //Get InputHandler to push events into Siddhi
-        InputHandler inputHandler = siddhiAppRuntime.getInputHandler("StockStream");
+        InputHandler inputHandler = siddhiAppRuntime.getInputHandler("transactionStream");
 
         //Start processing
         siddhiAppRuntime.start();
 
         //Sending events to Siddhi
-        inputHandler.send(new Object[]{"IBM", 700f, 100L});
-        inputHandler.send(new Object[]{"WSO2", 60.5f, 200L});
-        inputHandler.send(new Object[]{"GOOG", 50f, 30L});
-        inputHandler.send(new Object[]{"IBM", 76.6f, 400L});
-        inputHandler.send(new Object[]{"WSO2", 45.6f, 50L});
+        inputHandler.send(new Object[]{111111L, 100D, "Colombo - 02"});
+        inputHandler.send(new Object[]{111111L, 1000D, "Colombo - 03"});
+
+        inputHandler.send(new Object[]{111111L, 5000D, "Colombo - 03"});
+        inputHandler.send(new Object[]{111111L, 50000D, "Colombo - 05"});
+
         Thread.sleep(500);
 
         //Shutdown runtime
