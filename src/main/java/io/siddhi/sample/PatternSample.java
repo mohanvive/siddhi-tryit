@@ -42,6 +42,7 @@ public class PatternSample {
                 "@info(name = 'query1') " +
                 "from every (e1 = transactionStream -> e2 = transactionStream[e1.cardNo == cardNo and amount > e1.amount]" +
                 "                   -> e3 = transactionStream[e2.cardNo == cardNo and amount > e2.amount]) " +
+                " within 10 sec " +
                 "select e1.cardNo , e3.amount as finalTransactionAmount,  e3.location as finalLocation " +
                 "insert into possibleFraudStream;";
 
@@ -67,11 +68,12 @@ public class PatternSample {
         //Sending events to Siddhi
         inputHandler.send(new Object[]{111111L, 100D, "Colombo - 02"});
         inputHandler.send(new Object[]{111111L, 1000D, "Colombo - 03"});
-
+        Thread.sleep(6000);
         inputHandler.send(new Object[]{111111L, 5000D, "Colombo - 03"});
-        inputHandler.send(new Object[]{111111L, 50000D, "Colombo - 05"});
 
-        Thread.sleep(500);
+
+
+        Thread.sleep(5000);
 
         //Shutdown runtime
         siddhiAppRuntime.shutdown();

@@ -40,8 +40,8 @@ public class SimpleFilterSample {
                 "define stream StockStream (symbol string, price float, volume long); " +
                 "" +
                 "@info(name = 'query1') " +
-                "from StockStream[volume < 150] " +
-                "select symbol, price " +
+                "from StockStream[volume > 150] " +
+                "select symbol, price, volume " +
                 "insert into OutputStream;";
 
         //Generate runtime
@@ -69,7 +69,7 @@ public class SimpleFilterSample {
         inputHandler.send(new Object[]{"GOOG", 50f, 30L});
         inputHandler.send(new Object[]{"IBM", 76.6f, 400L});
         inputHandler.send(new Object[]{"WSO2", 45.6f, 50L});
-        Thread.sleep(500);
+        Thread.sleep(5000);
 
         //Shutdown runtime
         siddhiAppRuntime.shutdown();

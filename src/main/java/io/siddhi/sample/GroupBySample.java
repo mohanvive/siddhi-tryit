@@ -73,11 +73,11 @@ public class GroupBySample {
 
         Thread.sleep(2000);
 
-        inputHandler.send(new Object[]{"IBM", 700f, 100L});
-        inputHandler.send(new Object[]{"WSO2", 60.5f, 200L});
+        inputHandler.send(new Object[]{"IBM", 700f, 200L});
+        inputHandler.send(new Object[]{"WSO2", 60.5f, 300L});
         inputHandler.send(new Object[]{"GOOG", 50f, 30L});
-        inputHandler.send(new Object[]{"IBM", 76.6f, 400L});
-        inputHandler.send(new Object[]{"WSO2", 45.6f, 50L});
+        inputHandler.send(new Object[]{"IBM", 76.6f, 500L});
+        inputHandler.send(new Object[]{"WSO2", 45.6f, 20L});
 
         Thread.sleep(500);
 

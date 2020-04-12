@@ -28,7 +28,7 @@ import io.siddhi.core.util.EventPrinter;
 /**
  * The sample demonstrate how to use Siddhi within another Java program.
  */
-public class SlidingWindowSample {
+public class BatchLengthWindowSample {
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -40,7 +40,7 @@ public class SlidingWindowSample {
                 "define stream StockStream (symbol string, price float, volume long); " +
                 "" +
                 "@info(name = 'query1') " +
-                "from StockStream#window.length(2)" +
+                "from StockStream#window.lengthBatch(2)" +
                 "select symbol, price, sum(volume) as totalVolume " +
                 "insert into OutputStream;";
 
@@ -69,6 +69,7 @@ public class SlidingWindowSample {
         inputHandler.send(new Object[]{"GOOG", 50f, 30L});
         inputHandler.send(new Object[]{"IBM", 76.6f, 400L});
         inputHandler.send(new Object[]{"WSO2", 45.6f, 50L});
+        inputHandler.send(new Object[]{"WSO2", 45.6f, 750L});
         Thread.sleep(500);
 
         //Shutdown runtime
